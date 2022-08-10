@@ -60,7 +60,8 @@ model users {
 enum businesses_business_type {
   Beauty
   Food
-  Business
+  Coffee
+  BusinessService
   Hobbies
   Other
 }

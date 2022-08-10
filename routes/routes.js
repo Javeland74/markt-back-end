@@ -4,11 +4,7 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient()
 
-// async function main() {
-//     const allUsers = await prisma.users.findMany(
-//         console.log(allUsers);
-//     )
-// }
+//             BUSINESSES
 
 // GET ALL BUSINESSES
 router.route('/businesses').get(async (req, res) => {
@@ -25,55 +21,85 @@ router.route('/businesses').get(async (req, res) => {
 });
 
 //GET A BUSINESS WITH ITS ADDRESS
-router.route('/businessWithAddress').get(async (res, req) => {
+router.route('/businessWithAddress').get(async (req, res) => {
     try {
 
-        const business = await prisma.businesses.findUnique({
+        const businessAddress = await prisma.businesses.findUnique({
             where: {
-                name_date: {
-                    biz_name: 'Nellys Nails',
-                    address: '123_123st_Edmonton_AB'
-                }
-            }
+                id: 1,
+            },
+            select: {
+                biz_name: true,
+                address: true,
+            },
         })
-        res.status(200).json(business);
+        res.status(200).json(businessAddress);
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }
-})
-
+});
 
 //GET ALL BUSINESSES WITH ADDRESS
-// router.route('/businessWithQuery').get(async (res, req) => {
-//     try {
+router.route('/businessesaddresses').get(async (req, res) => {
+    try {
+        const allBizAddresses = await prisma.businesses.findMany({
+            select: {
+                biz_name: true,
+                address: true,
+            }
+        })
+        res.status(200).json(allBizAddresses);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
 
-//         const { includeAddress } = req.query;
-
-//         const businesses = await prisma.businesses.findMany({
-//             include: includeRatings ? { ratings: true } : undefined
-//         })
-//         res.status(200).json(businesses);
-//     } catch (error) {
-//         console.log(error);
-//         res.sendStatus(500);
-//     }
-// })
 
 // //ADD BUSINESS
-// router.route('/businesses').post(async (req, res) => {
-//     const newBusiness = await prisma.businesses.create({
-//         data: {
-//             biz_name: "Test",
-//             email: 'test@test.com',
-//             password: 'password',
-//             business_type: 'hobbies',
-//             address: '123 Test St.',
-//             image: '../assets/test.jpg',
-//         }
-//     })
-// })
+router.route('/addBusiness').post(async (req, res) => {
+    const business = req.body.data;
+    try {
 
-//  )
+        const newBusiness = await prisma.businesses.create({
+            data: {
+                name: business.biz_name,
+                email: business.email,
+                password: business.password,
+                business_type: business.business_type,
+                address: business.address,
+                image: business.image,
+            }
+        })
+        res.status(200).json(newBusiness);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+//                USERS
+
+//ADD USER
+router.route('/addUser').post(async (req, res) => {
+    const user = req.body.data;
+    try {
+        const newUser = await prisma.users.create({
+            data: {
+                name: user.name,
+                email: user.email,
+                username: user.username,
+                password: user.password,
+                address: user.address,
+                image: user.image
+            }
+        })
+        res.status(200).json(newUser);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
 
 module.exports = router
