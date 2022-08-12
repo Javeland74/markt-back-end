@@ -14,6 +14,7 @@ model association_table {
   businesses  businesses? @relation(fields: [business_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "association_table_ibfk_1")
   users       users?      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "association_table_ibfk_2")
 
+  @@unique([business_id, user_id])
   @@index([business_id], map: "business_id")
   @@index([user_id], map: "user_id")
 }
