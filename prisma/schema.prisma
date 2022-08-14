@@ -39,6 +39,7 @@ model post {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
   business_id Int?        @db.UnsignedInt
   image       String      @db.VarChar(255)
+  headline    String      @db.VarChar(255)
   body        String      @db.VarChar(255)
   postedAT    DateTime    @default(now()) @db.Timestamp(0)
   businesses  businesses? @relation(fields: [business_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_1")

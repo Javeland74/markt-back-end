@@ -43,7 +43,7 @@ router.route('/businessWithAddress').get(async (req, res) => {
 });
 
 //GET ALL BUSINESSES WITH ADDRESS - WORKS!
-router.route('/businessesaddresses').get(async (req, res) => {
+router.route('/businessesAddresses').get(async (req, res) => {
     try {
         const allBizAddresses = await prisma.businesses.findMany({
             select: {
@@ -83,15 +83,15 @@ router.route('/addBusiness').post(async (req, res) => {
 
 // BUSINESS ADDS NEW POST - WORKS!
 router.route('/addPost').post(async (req, res) => {
-    const post = req.body.data;
+    // const post = req.body.data;
     try {
 
         const newPost = await prisma.post.create({
             data: {
-                business_id: post.business_id,
-                business: post.biz_name,
-                image: post.image,
-                comment: post.body,
+                business_id: 3,
+                // business: 'Nellys Nails'
+                image: 'img/example.jpg',
+                body: 'this is an example post for Pascals Cycles',
             }
         })
         res.status(200).json(newPost);
@@ -137,6 +137,35 @@ router.route('/deletePost').delete(async (req, res) => {
     }
 })
 
+//DISPLAY ALL POSTS FOR YOUR BUSINESS - WORKS!
+router.route('/businessPosts').get(async (req, res) => {
+    // const allBizPosts = req.data.body;
+    try {
+        const businessPosts = await prisma.post.findMany({
+            where: {
+                businesses: {
+                    association_table: {
+                        every: {
+                            business_id: 3
+                        }
+                    }
+                }
+            },
+            include: {
+                businesses: {
+                    select: {
+                        biz_name: true
+                    }
+                }
+            }
+        })
+        res.status(200).json(businessPosts);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
 //                USERS API CALLS
 ////////////////////////////////////////////////////////////
 
@@ -179,13 +208,13 @@ router.route('/follow').post(async (req, res) => {
 
 })
 
-//UNFOLLOW BUSINESS - NOT FINISHED
+//UNFOLLOW BUSINESS - NEEDS TESTING
 router.route('/unfollow').delete(async (req, res) => {
-    // const business = req.data.body;
+    const business = req.data.body;
     try {
         const unfollowBusiness = await prisma.association_table.delete({
             where: {
-                id: 1
+                id: business.business_id
             }
         })
         res.status(200).json(unfollowBusiness);
@@ -195,18 +224,57 @@ router.route('/unfollow').delete(async (req, res) => {
     }
 })
 
-//GET ALL POSTS FROM A FOLLOWED BUSINESS
-// router.route('/followedBusiness').get(async (req, res) => {
-//     try {
-//         const businessPosts = await prisma.post.findUnique({
-//             where: {
-//                 business_id: 1
-//             },
-//             select: {
-//                 post
-//             }
-//         })
-//     }
-// });
+//GET ALL FOLLOWED BUSINESSES
+router.route('/followedBusinesses').get(async (req, res) => {
+    try {
+        const myBusinesses = await prisma.businesses.findMany({
+            where: {
+                association_table: {
+                    some: {
+                        user_id: 1
+                    }
+                }
+            },
+            select: {
+                biz_name: true
+            }
+        })
+        res.status(200).json(myBusinesses);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+})
+
+//GET ALL POSTS FROM A FOLLOWED BUSINESS - WORKS!!
+router.route('/followedBusinessPosts').get(async (req, res) => {
+    // const newBizFollow = req.data.body;
+    try {
+        const businessPosts = await prisma.post.findMany({
+            where: {
+                businesses: {
+                    association_table: {
+                        every: {
+                            business_id: {
+                                in: [1, 3]
+                            }
+                        }
+                    }
+                }
+            },
+            include: {
+                businesses: {
+                    select: {
+                        biz_name: true
+                    }
+                }
+            }
+        })
+        res.status(200).json(businessPosts);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
 
 module.exports = router
