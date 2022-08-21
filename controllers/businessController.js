@@ -23,6 +23,9 @@ const businessWithAddress = async (req, res) => {
             select: {
                 biz_name: true,
                 address: true,
+                lat: true,
+                lng: true,
+                id: true
             },
         })
         res.status(200).json(businessAddress);
@@ -38,6 +41,10 @@ const businessesAddresses = async (req, res) => {
             select: {
                 biz_name: true,
                 address: true,
+                business_type: true,
+                lat: true,
+                lng: true,
+                id: true
             }
         })
         res.status(200).json(allBizAddresses);

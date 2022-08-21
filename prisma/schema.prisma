@@ -29,19 +29,23 @@ model businesses {
   verified          Boolean?
   address           String                   @db.VarChar(255)
   image             String                   @db.VarChar(255)
+  usersId           Int?                     @db.UnsignedInt
+  lat               Decimal?                 @db.Decimal(18, 10)
+  lng               Decimal?                 @db.Decimal(18, 10)
+  users             users?                   @relation(fields: [usersId], references: [id])
   association_table association_table[]
   post              post[]
-  users             users?                   @relation(fields: [usersId], references: [id])
-  usersId           Int?                     @db.UnsignedInt
+
+  @@index([usersId], map: "businesses_usersId_fkey")
 }
 
 model post {
   id          Int         @id @default(autoincrement()) @db.UnsignedInt
   business_id Int?        @db.UnsignedInt
   image       String      @db.VarChar(255)
-  headline    String      @db.VarChar(255)
   body        String      @db.VarChar(255)
   postedAT    DateTime    @default(now()) @db.Timestamp(0)
+  headline    String      @db.VarChar(255)
   businesses  businesses? @relation(fields: [business_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_1")
 
   @@index([business_id], map: "business_id")
@@ -55,8 +59,8 @@ model users {
   password          String              @db.VarChar(255)
   address           String              @db.VarChar(255)
   image             String              @db.VarChar(255)
-  following         businesses[]
   association_table association_table[]
+  following         businesses[]
 }
 
 enum businesses_business_type {
