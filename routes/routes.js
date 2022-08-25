@@ -38,6 +38,9 @@ router.get('/businessPosts', businessesController.businessPosts);
 //                USERS API CALLS
 ////////////////////////////////////////////////////////////
 
+//GET ALL USERS
+router.get('/users', usersController.getUsers);
+
 //ADD USER - WORKS!
 router.post('/addUser', usersController.addUser);
 

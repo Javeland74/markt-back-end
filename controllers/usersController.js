@@ -1,6 +1,18 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient()
 
+const getUsers = async (req, res) => {
+    try {
+
+        const users = await prisma.users.findMany();
+
+        res.status(200).json(users);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+}
+
 const addUser = async (req, res) => {
     const user = req.body.data;
     try {
@@ -106,6 +118,7 @@ const followedBusinessPosts = async (req, res) => {
 }
 
 module.exports = {
+    getUsers,
     addUser,
     follow,
     unfollow,

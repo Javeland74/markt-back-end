@@ -136,7 +136,7 @@ const businessPosts = async (req, res) => {
                 businesses: {
                     association_table: {
                         every: {
-                            business_id: 3
+                            business_id: 4
                         }
                     }
                 }
@@ -144,7 +144,8 @@ const businessPosts = async (req, res) => {
             include: {
                 businesses: {
                     select: {
-                        biz_name: true
+                        biz_name: true,
+                        address: true
                     }
                 }
             }
