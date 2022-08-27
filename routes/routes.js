@@ -24,7 +24,7 @@ router.get('/businessesAddresses', businessesController.businessesAddresses);
 router.post('/addBusiness', businessesController.addBusiness);
 
 // BUSINESS ADDS NEW POST - WORKS!
-router.post('/addPost', businessesController.addPost);
+// router.post('/addPost', businessesController.addPost);
 
 //EDIT POST IMAGE AND/OR TEXT
 router.put('/editPost', businessesController.editPost)
@@ -33,13 +33,16 @@ router.put('/editPost', businessesController.editPost)
 router.delete('/deletePost', businessesController.deletePost)
 
 //DISPLAY ALL POSTS FOR YOUR BUSINESS - WORKS!
-router.get('/businessPosts', businessesController.businessPosts);
+router.get('/businessPosts/:bizID', businessesController.businessPosts);
 
 //                USERS API CALLS
 ////////////////////////////////////////////////////////////
 
 //GET ALL USERS
 router.get('/users', usersController.getUsers);
+
+//GET USER BY ID
+// router.get('/:userid', usersController.getUserByID)
 
 //ADD USER - WORKS!
 router.post('/addUser', usersController.addUser);

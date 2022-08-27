@@ -28,7 +28,7 @@ model businesses {
   business_type     businesses_business_type
   verified          Boolean?
   address           String                   @db.VarChar(255)
-  image             String                   @db.VarChar(255)
+  image             String?                  @db.VarChar(255)
   usersId           Int?                     @db.UnsignedInt
   lat               Decimal?                 @db.Decimal(18, 10)
   lng               Decimal?                 @db.Decimal(18, 10)
@@ -58,7 +58,10 @@ model users {
   username          String              @unique(map: "username") @db.VarChar(255)
   password          String              @db.VarChar(255)
   address           String              @db.VarChar(255)
-  image             String              @db.VarChar(255)
+  image             String?             @db.VarChar(255)
+  verified          Boolean?
+  lat               Decimal?            @db.Decimal(18, 10)
+  lng               Decimal?            @db.Decimal(18, 10)
   association_table association_table[]
   following         businesses[]
 }

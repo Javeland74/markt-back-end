@@ -13,17 +13,30 @@ const getUsers = async (req, res) => {
     }
 }
 
+// const getUserByID = async (req, res) => {
+//     try{
+//         const id = parseInt(req.params.userid)
+
+//         const singleUser = await prisma.users.findMany({
+//             where: { userid: id }
+
+//             // THIS IS HOW TO DYNAMICALLY USE A USER ID TO DETERMINE API CALLS
+//         })
+//     }
+
+// }
+
+
 const addUser = async (req, res) => {
-    const user = req.body.data;
+    const user = req.body;
     try {
         const newUser = await prisma.users.create({
             data: {
-                name: user.name,
                 email: user.email,
+                name: user.name,
                 username: user.username,
                 password: user.password,
                 address: user.address,
-                image: user.image
             }
         })
         res.status(200).json(newUser);
@@ -72,12 +85,15 @@ const followedBusinesses = async (req, res) => {
             where: {
                 association_table: {
                     some: {
-                        user_id: 1
+                        user_id: 2
                     }
                 }
             },
             select: {
-                biz_name: true
+                id: true,
+                biz_name: true,
+                business_type: true
+
             }
         })
         res.status(200).json(myBusinesses);
@@ -96,7 +112,7 @@ const followedBusinessPosts = async (req, res) => {
                     association_table: {
                         every: {
                             business_id: {
-                                in: [1, 3]
+                                in: [1, 2, 3, 4]
                             }
                         }
                     }
@@ -119,6 +135,7 @@ const followedBusinessPosts = async (req, res) => {
 
 module.exports = {
     getUsers,
+    // getUserByID,
     addUser,
     follow,
     unfollow,

@@ -23,6 +23,7 @@ const businessWithAddress = async (req, res) => {
             select: {
                 biz_name: true,
                 address: true,
+                business_type: true,
                 lat: true,
                 lng: true,
                 id: true
@@ -55,17 +56,17 @@ const businessesAddresses = async (req, res) => {
 }
 
 const addBusiness = async (req, res) => {
-    const business = req.body.data;
+    const business = req.body;
     try {
 
         const newBusiness = await prisma.businesses.create({
             data: {
-                name: business.biz_name,
+                biz_name: business.name,
+                owner: business.owner,
                 email: business.email,
                 password: business.password,
                 business_type: business.business_type,
                 address: business.address,
-                image: business.image,
             }
         })
         res.status(200).json(newBusiness);
@@ -75,24 +76,24 @@ const addBusiness = async (req, res) => {
     }
 }
 
-const addPost = async (req, res) => {
-    // const post = req.body.data;
-    try {
+// const addPost = async (req, res) => {
+//     // const post = req.body.data;
+//     try {
 
-        const newPost = await prisma.post.create({
-            data: {
-                business_id: 3,
-                // business: 'Nellys Nails'
-                image: 'img/example.jpg',
-                body: 'this is an example post for Pascals Cycles',
-            }
-        })
-        res.status(200).json(newPost);
-    } catch (error) {
-        console.log(error);
-        res.sendStatus(500);
-    }
-}
+// const newPost = await prisma.post.create({
+//     data: {
+//                 business_id: 4,
+//                 : 'Nellys Nails'
+// image: 'img/example.jpg',
+//     body: 'this is an example post for Pascals Cycles',
+//             }
+//         })
+// res.status(200).json(newPost);
+//     } catch (error) {
+//     console.log(error);
+//     res.sendStatus(500);
+// }
+// }
 
 const editPost = async (req, res) => {
     const post = req.body.data;
@@ -130,25 +131,13 @@ const deletePost = async (req, res) => {
 
 const businessPosts = async (req, res) => {
     // const allBizPosts = req.data.body;
+    const bizID = Number(req.params.bizID)
+
     try {
         const businessPosts = await prisma.post.findMany({
             where: {
-                businesses: {
-                    association_table: {
-                        every: {
-                            business_id: 4
-                        }
-                    }
-                }
+                business_id: bizID
             },
-            include: {
-                businesses: {
-                    select: {
-                        biz_name: true,
-                        address: true
-                    }
-                }
-            }
         })
         res.status(200).json(businessPosts);
     } catch (error) {
@@ -162,7 +151,7 @@ module.exports = {
     businessWithAddress,
     businessesAddresses,
     addBusiness,
-    addPost,
+    // addPost,
     editPost,
     deletePost,
     businessPosts
