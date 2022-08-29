@@ -5,6 +5,7 @@
 ### Pre-reqs for this project: 
 
 Mapbox API Access Token (available for free at [Mapbox.com](mapbox.com))
+
 MySQL installed locally
 
 ### Steps:
